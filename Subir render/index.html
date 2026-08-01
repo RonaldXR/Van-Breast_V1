@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="es" data-theme="pink">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" id="themeColor" content="#159A9D" />
+    <meta
+      name="description"
+      content="Prototipo local de entrenamiento para autoexploración mamaria asistida por un guante de presión."
+    />
+    <title>VAN—BREAST | Entrenamiento clínico</title>
+    <link rel="icon" type="image/png" href="static/assets/logo.png" />
+    <link rel="stylesheet" href="static/styles.css" />
+    <link rel="stylesheet" href="static/theme.css" />
+  </head>
+  <body data-initial-screen="login">
+    <main class="login-page" id="loginPage">
+      <section class="login-context" aria-label="Presentación">
+        <div class="login-context__top">
+          <div class="brand-lockup">
+            <img class="brand-logo" src="static/assets/logo.png" alt="" />
+            <span><strong>VAN—BREAST</strong><small>Training system</small></span>
+          </div>
+          <span class="eyebrow">E-HEALTH · ENTRENAMIENTO CLÍNICO</span>
+        </div>
+        <figure class="login-context__visual">
+          <img
+            src="static/assets/login-medical-background-v2.png"
+            alt="Guante electrónico con sensores de presión rodeado por modelos de nódulos benignos lisos y malignos irregulares"
+          />
+        </figure>
+      </section>
+
+      <section class="login-panel">
+        <div class="login-card">
+          <span class="section-index">BIENVENIDA</span>
+          <h2>Iniciar sesión</h2>
+          <p class="muted" id="loginSubtitle">Accede al panel de entrenamiento.</p>
+          <form id="loginForm">
+            <div class="login-access-switch" role="group" aria-label="Tipo de acceso">
+              <button data-login-mode="clinical" type="button" aria-pressed="true">
+                Personal clínico
+              </button>
+              <button data-login-mode="admin" type="button" aria-pressed="false">
+                Administración
+              </button>
+            </div>
+            <p class="login-access-hint" id="loginAccessHint">
+              Credenciales locales de demostración para el personal clínico.
+            </p>
+            <label>
+              Correo institucional
+              <span class="input-shell">
+                <span aria-hidden="true">@</span>
+                <input
+                  id="email"
+                  type="email"
+                  value="vabanto@uch.edu.pe"
+                  autocomplete="email"
+                  required
+                />
+              </span>
+            </label>
+            <label>
+              Contraseña
+              <span class="input-shell">
+                <span aria-hidden="true">⌁</span>
+                <input
+                  id="password"
+                  type="password"
+                  value="entrenamiento"
+                  autocomplete="current-password"
+                  required
+                />
+                <button class="input-action" id="togglePassword" type="button">Ver</button>
+              </span>
+            </label>
+            <button class="button button--primary button--full" type="submit">
+              Iniciar sesión <span aria-hidden="true">→</span>
+            </button>
+            <p class="form-error" id="loginError" role="alert" hidden>
+              Las credenciales no corresponden al tipo de acceso seleccionado.
+            </p>
+          </form>
+          <div class="login-device">
+            <div>
+              <span class="micro-label">ESTADO DEL DISPOSITIVO</span>
+              <span class="glove-badge glove-badge--large js-glove-badge">
+                <span class="status-dot"></span><span class="js-glove-label"></span>
+              </span>
+            </div>
+            <button class="text-button" id="cycleStatus" type="button">Simular estado</button>
+          </div>
+          <p class="login-help">
+            Puedes ingresar sin el guante. El entrenamiento solo se habilita
+            cuando el dispositivo está conectado.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <main class="app-shell" id="appShell" hidden>
+      <header class="app-header">
+        <button class="mobile-menu" id="mobileMenu" type="button" aria-label="Abrir menú">☰</button>
+        <div class="brand-lockup brand-lockup--compact">
+          <img class="brand-logo" src="static/assets/logo.png" alt="" />
+          <span><strong>VAN—BREAST</strong></span>
+        </div>
+        <div class="header-meta">
+          <span class="glove-badge js-glove-badge">
+            <span class="status-dot"></span><span class="js-glove-label"></span>
+          </span>
+          <time id="headerClock">17 JUL 2026 · 03:38:52</time>
+        </div>
+      </header>
+
+      <aside class="sidebar" id="sidebar">
+        <div class="profile-card">
+          <span class="avatar" id="profileAvatar">VA</span>
+          <span><strong id="profileName">Vania Abanto</strong><small id="profileRole">Investigadora</small></span>
+        </div>
+        <nav aria-label="Navegación principal">
+          <button class="active" data-screen="home" type="button"><span>⌂</span>Inicio</button>
+          <button data-screen="history" type="button"><span>▤</span>Historial</button>
+          <button data-screen="people" type="button"><span>♙</span>Participantes</button>
+          <button data-screen="settings" type="button"><span>⚙</span>Configuración</button>
+        </nav>
+        <div class="sidebar-ribbon" aria-hidden="true">
+          <img src="static/assets/pink-awareness-ribbon.png" alt="" />
+        </div>
+        <div class="sidebar-note">
+          <span class="micro-label">SISTEMA</span>
+          <strong>Prototipo local v1.0</strong>
+          <small>MongoDB local</small>
+        </div>
+        <button class="logout-button" id="logoutButton" type="button">
+          <span>↪</span>Cerrar sesión
+        </button>
+      </aside>
+      <button class="mobile-scrim" id="mobileScrim" type="button" aria-label="Cerrar menú" hidden></button>
+
+      <section class="app-content">
+        <section class="page home-page screen" id="screen-home">
+          <div class="page-heading page-heading--split">
+            <div>
+              <h1>Resumen de actividad</h1>
+              <p>Prepara una práctica o revisa el avance reciente del programa.</p>
+            </div>
+          </div>
+
+          <section class="start-workflow" aria-label="Iniciar entrenamiento">
+            <div class="workflow-copy">
+              <div class="participant-select">
+                <label for="participantSearch"><b>1</b> Selecciona a la participante</label>
+                <div class="participant-combobox" id="participantCombobox">
+                  <label class="participant-search" for="participantSearch">
+                    <span class="search-icon" aria-hidden="true"></span>
+                    <input
+                      id="participantSearch"
+                      type="text"
+                      role="combobox"
+                      aria-autocomplete="list"
+                      aria-controls="participantOptions"
+                      aria-expanded="false"
+                      placeholder=""
+                      autocomplete="off"
+                    />
+                  </label>
+                  <button
+                    class="participant-toggle"
+                    id="participantToggle"
+                    type="button"
+                    aria-label="Mostrar participantes"
+                    aria-controls="participantOptions"
+                    aria-expanded="false"
+                  >
+                    <span aria-hidden="true"></span>
+                  </button>
+                  <div class="participant-options" id="participantOptions" role="listbox" hidden></div>
+                </div>
+              </div>
+            </div>
+            <div class="start-action">
+              <span class="workflow-step"><b>2</b> Comienza la práctica</span>
+              <button class="button button--primary start-button" id="startTraining" type="button">
+                <span>Iniciar entrenamiento</span><span aria-hidden="true">→</span>
+              </button>
+              <small class="start-hint" id="startHint" hidden></small>
+            </div>
+          </section>
+
+          <section class="metrics-row" aria-label="Resumen de actividad">
+            <article class="metric">
+              <span class="micro-label">SESIONES HOY</span>
+              <strong id="sessionsTodayMetric">0</strong>
+            </article>
+            <article class="metric">
+              <span class="micro-label">PARTICIPANTES</span>
+              <strong id="participantMetric">24</strong>
+            </article>
+            <article class="metric">
+              <span class="micro-label">INSTRUCTORES</span>
+              <strong id="instructorMetric">16</strong>
+            </article>
+          </section>
+
+          <section class="home-grid">
+            <article class="activity-panel">
+              <div class="section-heading">
+                <div><span class="section-index">ACTIVIDAD RECIENTE</span><h2>Últimas sesiones</h2></div>
+                <button class="text-button" data-screen="history" type="button">Ver historial →</button>
+              </div>
+              <div id="recentSessions"></div>
+            </article>
+            <article class="weekly-panel">
+              <span class="section-index">CONSISTENCIA</span>
+              <h2>Ritmo semanal</h2>
+              <div class="week-bars" id="weeklyBars">
+                <canvas
+                  id="weeklyChart"
+                  role="img"
+                  aria-label="Gráfica de sesiones completadas por día de la semana"
+                  aria-describedby="weeklyChartDescription"
+                ></canvas>
+              </div>
+              <p id="weeklyChartDescription"><strong id="weeklyTotal">0 prácticas</strong> completadas esta semana.</p>
+            </article>
+          </section>
+        </section>
+
+        <section class="training-page screen" id="screen-training" hidden>
+          <div class="connection-alert" id="connectionAlert" hidden>
+            <span class="glove-badge js-glove-badge">
+              <span class="status-dot"></span><span class="js-glove-label"></span>
+            </span>
+            <span>La captura está en pausa. Revisa el dispositivo para continuar.</span>
+          </div>
+          <div class="training-grid">
+            <section class="anatomy-panel">
+              <div class="panel-heading">
+                <div><span class="section-index">ZONA DE EXPLORACIÓN</span><h2>Mapa anatómico</h2></div>
+                <span class="step-counter"><span id="activePointLabel">5</span> / 8</span>
+              </div>
+              <div class="anatomy-map" aria-label="Mapa de puntos de palpación">
+                <div class="body-axis"></div>
+                <div class="anatomy-ring anatomy-ring--outer"></div>
+                <div class="anatomy-ring anatomy-ring--inner"></div>
+                <div class="anatomy-core"></div>
+                <button class="touch-point touch-point--1" type="button">1</button>
+                <button class="touch-point touch-point--2" type="button">2</button>
+                <button class="touch-point touch-point--3" type="button">3</button>
+                <button class="touch-point touch-point--4" type="button">4</button>
+                <button class="touch-point touch-point--5 current" type="button">5</button>
+                <button class="touch-point touch-point--6" type="button">6</button>
+                <button class="touch-point touch-point--7" type="button">7</button>
+                <button class="touch-point touch-point--8" type="button">8</button>
+              </div>
+              <div class="map-legend">
+                <span><i class="legend-dot legend-dot--done"></i>Completado</span>
+                <span><i class="legend-dot legend-dot--current"></i>Punto actual</span>
+                <span><i class="legend-dot"></i>Pendiente</span>
+              </div>
+            </section>
+
+            <section class="sensor-panel">
+              <article class="sensor-reading">
+                <div>
+                  <span class="micro-label">DEDO ÍNDICE</span>
+                  <strong><span id="indexPressure">12.4</span> <small>N</small></strong>
+                  <p>Presión actual detectada</p>
+                  <span class="pressure-verdict correct" id="indexVerdict"><i></i> Presión correcta</span>
+                </div>
+                <div class="pressure-gauge"><span id="indexGauge" style="height:77%"></span><i></i></div>
+              </article>
+              <article class="sensor-reading">
+                <div>
+                  <span class="micro-label">DEDO MEDIO</span>
+                  <strong><span id="middlePressure">8.7</span> <small>N</small></strong>
+                  <p>Presión actual detectada</p>
+                  <span class="pressure-verdict correct" id="middleVerdict"><i></i> Presión correcta</span>
+                </div>
+                <div class="pressure-gauge"><span id="middleGauge" style="height:54%"></span><i></i></div>
+              </article>
+            </section>
+
+            <aside class="session-panel">
+              <div class="panel-heading session-panel-heading">
+                <strong>Datos del entrenamiento</strong>
+                <span aria-hidden="true">▣</span>
+              </div>
+              <dl class="session-data">
+                <div><dt>Participante</dt><dd id="trainingParticipant">—</dd></div>
+                <div><dt>Instructora</dt><dd>Vania Abanto</dd></div>
+              </dl>
+              <div class="completion-ring session-timer-ring" style="--progress:74%">
+                <div><strong id="sessionClock">01:24</strong><small>TIEMPO</small></div>
+              </div>
+              <button class="button button--primary button--full" id="finishTraining" type="button">
+                Finalizar
+              </button>
+            </aside>
+          </div>
+          <section class="live-chart-panel">
+            <div class="panel-heading chart-heading">
+              <div><span class="section-index">GRÁFICA DE PRESIÓN APLICADA</span><h2>Respuesta de los sensores frente al tiempo</h2></div>
+              <div class="chart-legend"><span><i class="line-key line-key--dark"></i>Índice</span><span><i class="line-key"></i>Medio</span></div>
+            </div>
+            <div class="pressure-chart-wrap">
+              <canvas
+                class="pressure-chart"
+                id="liveChart"
+                role="img"
+                aria-label="Presión en tiempo real de los dedos índice y medio, medida en Newtons"
+              ></canvas>
+            </div>
+          </section>
+        </section>
+
+        <section class="page history-page screen" id="screen-history" hidden>
+          <div class="page-heading page-heading--split">
+            <div>
+              <h1>Historial de sesiones</h1>
+              <p>Consulta el desempeño, filtra prácticas y abre sus indicadores.</p>
+            </div>
+            <div class="page-heading-actions">
+              <button class="button button--danger" type="button" id="clearHistoryButton" hidden>Limpiar historial de pruebas</button>
+              <button class="button button--ghost export-button" type="button" id="exportButton"><span class="download-icon" aria-hidden="true"></span>Exportar registro</button>
+            </div>
+          </div>
+          <section class="filter-panel">
+            <div class="filter-heading">
+              <span class="section-index">FILTROS</span>
+              <button class="text-button" id="clearFilters" type="button">Limpiar</button>
+            </div>
+            <label>Participante<input id="historyParticipant" type="search" placeholder="Escribe nombre o apellido" autocomplete="off" /></label>
+            <label>Instructora<select id="historyInstructor"></select></label>
+            <label>Fecha<input id="historyDate" type="date" /></label>
+          </section>
+          <section class="records-section">
+            <div class="records-head">
+              <span>CÓDIGO</span><span>PARTICIPANTE</span><span>INSTRUCTORA</span><span>DURACIÓN</span>
+              <span>FECHA Y HORA</span><span></span>
+            </div>
+            <div class="records-scroll" id="historyRecords"></div>
+          </section>
+        </section>
+
+        <section class="page people-page screen" id="screen-people" hidden>
+          <div class="admin-participant-manager" id="adminParticipantManager" hidden>
+            <div class="page-heading page-heading--split">
+              <div>
+                <span class="eyebrow">GESTIÓN ADMINISTRATIVA</span>
+                <h1>Participantes</h1>
+                <p>Edita datos, cambia la instructora asignada o retira un registro.</p>
+              </div>
+              <button class="button button--primary js-open-participant" type="button">+ Nueva participante</button>
+            </div>
+            <section class="participant-admin-panel">
+              <label class="participant-admin-search" for="adminParticipantSearch">
+                <span class="search-icon" aria-hidden="true"></span>
+                <input
+                  id="adminParticipantSearch"
+                  type="search"
+                  placeholder="Buscar por código, nombre, DNI o correo"
+                  autocomplete="off"
+                />
+              </label>
+              <div class="participant-admin-head" aria-hidden="true">
+                <span>CÓDIGO</span>
+                <span>PARTICIPANTE</span>
+                <span>CONTACTO</span>
+                <span>INSTRUCTORA</span>
+                <span>ACCIONES</span>
+              </div>
+              <div class="participant-admin-list" id="adminParticipantList"></div>
+            </section>
+          </div>
+          <div id="instructorOverview">
+            <div class="page-heading">
+              <div>
+                <h1>Instructores</h1>
+                <p>Selecciona un perfil para consultar su red de atención.</p>
+              </div>
+            </div>
+            <section class="instructor-section">
+              <div class="section-heading">
+                <div><span class="section-index"><span id="instructorTotal">16</span> PERFILES</span><h2>Equipo de instructores</h2></div>
+                <span class="carousel-counter" id="carouselCounter">01 — 04 / 16</span>
+              </div>
+              <div class="instructor-slider">
+                <button class="carousel-edge" id="previousInstructors" type="button" aria-label="Instructores anteriores">←</button>
+                <div class="instructor-carousel" id="instructorCarousel"></div>
+                <button class="carousel-edge" id="nextInstructors" type="button" aria-label="Siguientes instructores">→</button>
+              </div>
+            </section>
+            <section class="participant-register-strip">
+              <div><span class="section-index">PARTICIPANTES</span><h2><span id="participantCount">24</span> personas registradas</h2></div>
+              <button class="button button--primary participant-register-button js-open-participant" type="button">+ Nuevo registro</button>
+            </section>
+          </div>
+          <div id="instructorFocus" hidden>
+            <button class="back-button" id="backToInstructors" type="button">← Volver a instructores</button>
+            <div class="instructor-focus-heading">
+              <div>
+                <span class="eyebrow" id="focusEyebrow"></span>
+                <h1 id="focusName"></h1>
+                <p id="focusRole"></p>
+              </div>
+              <div class="focus-stat"><strong id="focusPatientCount">18</strong><span>pacientes atendidas</span></div>
+            </div>
+            <section class="patient-tree" id="patientTree"></section>
+          </div>
+        </section>
+
+        <section class="page settings-page screen" id="screen-settings" hidden>
+          <div class="page-heading">
+            <span class="eyebrow">AJUSTES DEL PROTOTIPO</span>
+            <h1>Configuración</h1>
+            <p>Simula el estado del guante, revisa los criterios y personaliza la interfaz.</p>
+          </div>
+          <section class="settings-grid">
+            <article class="settings-card">
+              <span class="section-index">CONEXIÓN DEL GUANTE</span>
+              <h2>Estado del dispositivo</h2>
+              <span class="glove-badge glove-badge--large js-glove-badge">
+                <span class="status-dot"></span><span class="js-glove-label"></span>
+              </span>
+              <div class="status-options" id="statusOptions">
+                <button data-status="connected" type="button"><span class="status-dot status-dot--connected"></span>Guante conectado</button>
+                <button data-status="disconnected" type="button"><span class="status-dot"></span>Guante desconectado</button>
+                <button data-status="connecting" type="button"><span class="status-dot status-dot--connecting"></span>Conectando…</button>
+                <button data-status="error" type="button"><span class="status-dot status-dot--error"></span>Error de conexión</button>
+              </div>
+            </article>
+            <article class="settings-card">
+              <span class="section-index">RANGO OBJETIVO</span>
+              <h2>Presión recomendada</h2>
+              <dl class="settings-values">
+                <div><dt>Dedo índice</dt><dd>9.5 — 13.5 N</dd></div>
+                <div><dt>Dedo medio</dt><dd>8.5 — 12.5 N</dd></div>
+                <div><dt>Muestreo</dt><dd>650 ms</dd></div>
+              </dl>
+            </article>
+            <article class="settings-card theme-settings-card" id="themeSettingsCard">
+              <div class="theme-settings-heading">
+                <div>
+                  <span class="section-index">APARIENCIA</span>
+                  <h2>Variantes de color</h2>
+                </div>
+                <p>Selecciona una para verla en toda la plataforma.</p>
+              </div>
+              <div class="theme-options" id="themeOptions" aria-label="Tema de color">
+                <button class="theme-option" data-theme-option="pink" type="button" aria-pressed="true">
+                  <span class="theme-swatches" aria-hidden="true">
+                    <i style="--swatch:#FAF5EF"></i><i style="--swatch:#97D2E4"></i><i style="--swatch:#CBEAF2"></i><i style="--swatch:#D58596"></i><i style="--swatch:#F6BBBF"></i><i style="--swatch:#F7D9D3"></i>
+                  </span>
+                  <span><strong>Azul y rosa</strong><small>Clínica, cálida y equilibrada</small></span>
+                  <span class="theme-check" aria-hidden="true">✓</span>
+                </button>
+                <button class="theme-option" data-theme-option="blue" type="button" aria-pressed="false">
+                  <span class="theme-swatches" aria-hidden="true">
+                    <i style="--swatch:#263D54"></i><i style="--swatch:#3F5772"></i><i style="--swatch:#E1EDF9"></i><i style="--swatch:#426E9C"></i><i style="--swatch:#5D89B7"></i>
+                  </span>
+                  <span><strong>Azul institucional</strong><small>Serena y profesional</small></span>
+                  <span class="theme-check" aria-hidden="true">✓</span>
+                </button>
+              </div>
+              <div class="admin-theme-lock" id="adminThemeLock" hidden>
+                <span aria-hidden="true">◆</span>
+                <span>
+                  <strong>Modo administrativo</strong>
+                  <small>La apariencia monocromática está fijada para esta sesión.</small>
+                </span>
+              </div>
+            </article>
+          </section>
+        </section>
+      </section>
+    </main>
+
+    <div class="vault-intro session-transition" id="vaultIntro" role="status" aria-live="polite" hidden>
+      <div class="transition-panel transition-panel--left" aria-hidden="true">
+        <span></span>
+      </div>
+      <div class="transition-panel transition-panel--right" aria-hidden="true">
+        <span></span>
+      </div>
+      <div class="transition-center">
+        <div class="transition-scan" aria-hidden="true">
+          <i></i><span></span>
+        </div>
+        <strong id="transitionTitle">Iniciando entrenamiento</strong>
+      </div>
+    </div>
+
+    <div class="modal-backdrop" id="detailBackdrop" hidden>
+      <section class="modal detail-modal" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+        <header class="modal-header">
+          <div><span class="eyebrow" id="detailRecord">REGISTRO #001</span><h2 id="detailTitle">Detalle de sesión</h2></div>
+          <button class="close-button js-close-detail" id="detailCloseButton" type="button" aria-label="Cerrar detalle">×</button>
+        </header>
+        <div class="detail-scroll">
+          <dl class="detail-summary">
+            <div><dt>Participante</dt><dd id="detailParticipant"></dd></div>
+            <div><dt>Instructora</dt><dd id="detailInstructor"></dd></div>
+            <div><dt>Duración</dt><dd id="detailDuration"></dd></div>
+            <div><dt>Fecha</dt><dd id="detailDate"></dd></div>
+          </dl>
+          <section class="detail-chart">
+            <div class="panel-heading chart-heading">
+              <div><span class="section-index">GRÁFICA 1</span><h3>Presión del índice y medio frente al tiempo</h3></div>
+              <div class="chart-legend"><span><i class="line-key line-key--dark"></i>Índice</span><span><i class="line-key"></i>Medio</span></div>
+            </div>
+            <div class="pressure-chart-wrap">
+              <canvas
+                class="pressure-chart"
+                id="detailChart"
+                role="img"
+                aria-label="Presión de los dedos índice y medio durante la sesión, medida en Newtons"
+              ></canvas>
+            </div>
+          </section>
+          <section class="detail-lower">
+            <div class="range-chart">
+              <span class="section-index">RESULTADO DE TIEMPO</span><h3>Tiempo con presión correcta</h3>
+              <div class="donut-row">
+                <div class="donut chart-donut" id="detailDonut">
+                  <canvas id="detailRangeChart" aria-hidden="true"></canvas>
+                  <div><strong id="detailRange">02:39</strong><small>PRESIÓN CORRECTA</small></div>
+                </div>
+                <div class="donut-notes">
+                  <span><i class="legend-dot legend-dot--done"></i>Presión correcta <strong id="insideRange">02:39 min</strong></span>
+                  <span><i class="legend-dot"></i>Presión fuera del rango <strong id="outsideRange">00:27 min</strong></span>
+                </div>
+              </div>
+            </div>
+            <div class="indicators">
+              <span class="section-index">INDICADORES</span><h3>Resumen de presión</h3>
+              <dl id="indicatorList"></dl>
+            </div>
+          </section>
+        </div>
+        <footer class="modal-footer">
+          <span id="detailFooterNote">Datos demostrativos en memoria</span>
+          <div class="detail-footer-actions">
+            <button class="button button--ghost" id="continueTraining" type="button" hidden>Volver al entrenamiento</button>
+            <button class="button button--primary" id="saveEvaluation" type="button" hidden>Guardar sesión y finalizar →</button>
+            <button class="button button--primary js-close-detail" id="detailCloseAction" type="button">Cerrar detalle</button>
+          </div>
+        </footer>
+      </section>
+    </div>
+
+    <div class="modal-backdrop" id="participantBackdrop" hidden>
+      <section class="modal participant-modal" role="dialog" aria-modal="true" aria-labelledby="participantTitle">
+        <header class="modal-header">
+          <div><span class="eyebrow" id="participantModalEyebrow">NUEVO REGISTRO</span><h2 id="participantTitle">Registrar participante</h2></div>
+          <button class="close-button js-close-participant" type="button" aria-label="Cerrar formulario">×</button>
+        </header>
+        <form id="participantForm">
+          <div class="form-grid">
+            <label class="code-field">Código interno<input id="newCode" readonly /><small>Asignado automáticamente</small></label>
+            <label>Nombre<input id="newName" required /></label>
+            <label>Apellidos<input id="newLastName" required /></label>
+            <label>DNI<input id="newDni" inputmode="numeric" maxlength="8" required /></label>
+            <label>Fecha de nacimiento<input id="newBirthDate" type="date" required /></label>
+            <label>Correo electrónico<input id="newEmail" type="email" required /></label>
+            <label>Celular <span>Opcional</span><input id="newPhone" inputmode="tel" /></label>
+            <label id="participantInstructorField" hidden>Instructora asignada<select id="newInstructor"></select></label>
+            <label class="form-span">Observaciones <span>Opcional</span><textarea id="newObservations" rows="3"></textarea></label>
+          </div>
+          <footer class="modal-footer">
+            <button class="button button--ghost js-close-participant" type="button">Cancelar</button>
+            <button class="button button--primary" id="participantSubmit" type="submit">Guardar participante</button>
+          </footer>
+        </form>
+      </section>
+    </div>
+
+    <script src="static/vendor/chart.umd.min.js"></script>
+    <script src="static/demo-api.js"></script>
+    <script src="static/charts.js"></script>
+    <script src="static/app.js"></script>
+  </body>
+</html>
