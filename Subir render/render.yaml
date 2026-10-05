@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: van-breast-frontend
+    runtime: static
+    buildCommand: ""
+    staticPublishPath: .
